@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NDESONESIA – Desa Etalase</title>
+<style>
+:root{--bg:#efe3c6;--fg:#2a1c10;--card:#dfcc9f;--line:#7a5a2e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1710;--fg:#f0e4c8;--card:#2e251a;--line:#a98348;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1d1710;--fg:#f0e4c8;--card:#2e251a;--line:#a98348;color-scheme:dark}
+html{height:100%}
+body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:Georgia,"Times New Roman",serif;display:flex;flex-direction:column}
+header{padding:8px 12px 4px;text-align:center}
+header b{font-size:20px;letter-spacing:3px}
+header small{display:block;opacity:.8;font-size:12px}
+#w{flex:1;min-height:0}
+canvas{width:100%;height:100%;display:block;touch-action:none}
+#bar{display:flex;gap:6px;justify-content:center;padding:8px;flex-wrap:wrap}
+button{background:var(--card);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:9px 12px;font:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid var(--line);outline-offset:2px}
+</style></head><body>
+<header><b>NDESONESIA</b><small>Ketuk atau geser untuk berjalan, atau pakai WASD/panah. <span id="cnt"></span></small></header>
+<div id="w"><canvas id="c"></canvas></div>
+<div id="bar"></div>
+
+<script type="application/json" id="data">["Riswa","Rury"]</script>
+<script>
+const c=document.getElementById('c'),x=c.getContext('2d'),W=1600,H=1100;
+let vw,vh,dpr,sc=1,cx=0,cy=0;
+function rs(){dpr=devicePixelRatio||1;const r=c.getBoundingClientRect();vw=r.width;vh=r.height;c.width=vw*dpr;c.height=vh*dpr;sc=Math.max(.7,Math.min(vw/700,vh/500))}
+addEventListener('resize',rs);rs();
+const R=[[775,515,50,50],[700,990,40,80],[860,990,40,80]];
+const bl=(a,b)=>{if(a<20||b<20||a>W-20||b>H-20)return 1;for(const r of R)if(a>r[0]-8&&a<r[0]+r[2]+8&&b>r[1]-8&&b<r[1]+r[3]+8)return 1;return 0};
+const mv=(o,dx,dy)=>{if(!bl(o.x+dx,o.y))o.x+=dx;if(!bl(o.x,o.y+dy))o.y+=dy};
+const P={x:800,y:1040,c:'#22262e',n:'Kamu',t:0,s:''};
+const D=JSON.parse(document.getElementById('data').textContent),CL=['#5b2a2a','#2a4a3b','#3a3a66','#4a3a22','#5a2a5a','#22262e'];let N=[];
+function spot(){let a,b,k=0;do{a=60+Math.random()*1480;b=320+Math.random()*540;k++}while(bl(a,b)&&k<40);return[a,b]}
+function mkN(){N=[{x:900,y:660,c:'#b8860b',n:'Kades Agung',t:0,s:'',g:null,f:1}].concat(D.map((n,i)=>{const p=spot();return{x:p[0],y:p[1],c:CL[i%6],n:n,t:0,s:'',g:null}}));document.getElementById('cnt').textContent='Desa Etalase · '+D.length+' warga resmi. Kamu masuk sebagai pengunjung.'}
+mkN();
+const hi=['Sugeng rawuh, Kisanak!','Monggo mampir ke alun-alun.','Desa kita makin rame!','Sugeng enjing!'];
+let tg=null,down=0;const K={};
+addEventListener('keydown',e=>{K[e.key.toLowerCase()]=1});addEventListener('keyup',e=>{K[e.key.toLowerCase()]=0});
+function pt(e){const r=c.getBoundingClientRect();tg={x:(e.clientX-r.left)/sc+cx,y:(e.clientY-r.top)/sc+cy}}
+c.addEventListener('pointerdown',e=>{down=1;pt(e)});c.addEventListener('pointermove',e=>{if(down)pt(e)});addEventListener('pointerup',()=>{down=0});
+const bar=document.getElementById('bar');
+[['👋 Sugeng rawuh!'],['🙏 Matur nuwun'],['🥷 Ayo latihan!']].forEach(a=>{const b=document.createElement('button');b.textContent=a[0];b.onclick=()=>{P.s=a[0].slice(3);P.t=220;const q=N[Math.floor(Math.random()*N.length)];setTimeout(()=>{q.s=hi[Math.floor(Math.random()*hi.length)];q.t=200},900)};bar.appendChild(b)});
+function txt(s,a,b,z,col){x.font='bold '+z+'px Georgia,serif';x.textAlign='center';x.lineWidth=3;x.strokeStyle='rgba(0,0,0,.6)';x.strokeText(s,a,b);x.fillStyle=col||'#fff';x.fillText(s,a,b)}
+function poly(p,f){x.fillStyle=f;x.beginPath();x.moveTo(p[0],p[1]);for(let i=2;i<p.length;i+=2)x.lineTo(p[i],p[i+1]);x.closePath();x.fill()}
+function house(r,rc,l){const[a,b,w,h]=r;x.fillStyle='#e8d9b0';x.fillRect(a,b,w,h);x.fillStyle='#7a4a22';x.fillRect(a+w/2-12,b+h-34,24,34);poly([a-14,b+8,a+w*.3,b-40,a+w*.7,b-40,a+w+14,b+8],rc);x.fillStyle='rgba(0,0,0,.2)';x.fillRect(a-14,b+4,w+28,6);txt(l,a+w/2,b+h+16,11)}
+function ninja(o){x.fillStyle='rgba(0,0,0,.25)';x.beginPath();x.ellipse(o.x,o.y+2,11,5,0,0,7);x.fill();x.fillStyle=o.c;x.fillRect(o.x-8,o.y-22,16,22);x.fillStyle='#e0b48a';x.beginPath();x.arc(o.x,o.y-30,9,0,7);x.fill();x.fillStyle='#1b1b1b';x.fillRect(o.x-9,o.y-27,18,6);x.fillStyle='#7a4a22';x.beginPath();x.arc(o.x,o.y-33,9,Math.PI,0);x.fill();x.fillStyle='#fff';x.fillRect(o.x-5,o.y-32,3,3);x.fillRect(o.x+2,o.y-32,3,3);txt(o.n,o.x,o.y-46,10);
+if(o.t>0){o.t--;x.font='12px Georgia,serif';const w=x.measureText(o.s).width+14;x.fillStyle='#fff';x.beginPath();x.roundRect(o.x-w/2,o.y-78,w,22,6);x.fill();x.fillStyle='#222';x.textAlign='center';x.fillText(o.s,o.x,o.y-62)}}
+function draw(){
+x.setTransform(dpr*sc,0,0,dpr*sc,-cx*dpr*sc,-cy*dpr*sc);
+x.fillStyle='#6fa44a';x.fillRect(0,0,W,H);
+
+
+x.fillStyle='#c9a96e';x.fillRect(765,150,70,920);x.fillStyle='#d9bf86';x.beginPath();x.ellipse(800,540,230,130,0,0,7);x.fill();
+
+
+
+x.fillStyle='#8d8a82';x.fillRect(700,990,40,80);x.fillRect(860,990,40,80);poly([692,990,720,962,748,990],'#6e6b64');poly([852,990,880,962,908,990],'#6e6b64');x.fillStyle='#6b4a22';x.fillRect(740,968,120,26);txt('NDESONESIA',800,987,13,'#f3dc9a');
+x.fillStyle='#5a3a1a';x.beginPath();x.arc(800,545,24,0,7);x.fill();
+[...N,P].sort((a,b)=>a.y-b.y).forEach(ninja);
+[[800,500,80],[750,520,60],[850,520,60],[800,470,55]].forEach(a=>{x.fillStyle='rgba(38,92,40,.85)';x.beginPath();x.arc(a[0],a[1],a[2],0,7);x.fill()});txt('Alun-alun',800,625,13);
+}
+function loop(){
+let dx=(K.arrowright||K.d?1:0)-(K.arrowleft||K.a?1:0),dy=(K.arrowdown||K.s?1:0)-(K.arrowup||K.w?1:0);
+if(dx||dy){tg=null;const l=Math.hypot(dx,dy);dx=dx/l*3.2;dy=dy/l*3.2}
+else if(tg){const ex=tg.x-P.x,ey=tg.y-P.y,d=Math.hypot(ex,ey);if(d<4)tg=null;else{dx=ex/d*3.2;dy=ey/d*3.2}}
+const ox=P.x,oy=P.y;mv(P,dx,dy);if(tg&&P.x==ox&&P.y==oy)tg=null;
+N.forEach(o=>{if(o.f)return;if(!o.g||Math.hypot(o.g.x-o.x,o.g.y-o.y)<4){if(Math.random()<.01){let a,b,i=0;do{a=60+Math.random()*1480;b=320+Math.random()*540;i++}while(bl(a,b)&&i<20);o.g=bl(a,b)?null:{x:a,y:b}}}
+if(o.g){const ex=o.g.x-o.x,ey=o.g.y-o.y,d=Math.hypot(ex,ey)||1,q=o.x,r=o.y;mv(o,ex/d*1,ey/d*1);if(o.x==q&&o.y==r)o.g=null}
+if(o.t<=0&&Math.random()<.0015){o.s=hi[Math.floor(Math.random()*hi.length)];o.t=180}});
+cx=Math.max(0,Math.min(W-vw/sc,P.x-vw/sc/2));cy=Math.max(0,Math.min(H-vh/sc,P.y-vh/sc/2));
+draw();requestAnimationFrame(loop)}
+loop();
+
+</script>
+</body></html>
