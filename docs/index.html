@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="id"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>NDESONESIA – Desa Etalase</title>
+<title>NDESONESIA – Desa Ninja Netizen</title>
+<meta name="description" content="Desa ninja Nusantara yang dibangun lewat komentar netizen. Subscribe dan komentar untuk jadi warga!">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NDESONESIA – Desa Ninja Netizen">
+<meta property="og:description" content="Desa ninja Nusantara yang dibangun lewat komentar netizen. Subscribe dan komentar untuk jadi warga!">
 <style>
 :root{--bg:#efe3c6;--fg:#2a1c10;--card:#dfcc9f;--line:#7a5a2e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1710;--fg:#f0e4c8;--card:#2e251a;--line:#a98348;color-scheme:dark}}
@@ -33,7 +37,7 @@ const mv=(o,dx,dy)=>{if(!bl(o.x+dx,o.y))o.x+=dx;if(!bl(o.x,o.y+dy))o.y+=dy};
 const P={x:800,y:1040,c:'#22262e',n:'Kamu',t:0,s:''};
 const D=JSON.parse(document.getElementById('data').textContent),CL=['#5b2a2a','#2a4a3b','#3a3a66','#4a3a22','#5a2a5a','#22262e'];let N=[];
 function spot(){let a,b,k=0;do{a=60+Math.random()*1480;b=320+Math.random()*540;k++}while(bl(a,b)&&k<40);return[a,b]}
-function mkN(){N=[{x:900,y:660,c:'#b8860b',n:'Kades Agung',t:0,s:'',g:null,f:1}].concat(D.map((n,i)=>{const p=spot();return{x:p[0],y:p[1],c:CL[i%6],n:n,t:0,s:'',g:null}}));document.getElementById('cnt').textContent='Desa Etalase · '+D.length+' warga resmi. Kamu masuk sebagai pengunjung.'}
+function mkN(){N=[{x:900,y:660,c:'#b8860b',n:'Kades Agung',t:0,s:'',g:null,f:1}].concat(D.map((n,i)=>{const p=spot();return{x:p[0],y:p[1],c:CL[i%6],n:n,t:0,s:'',g:null}}));document.getElementById('cnt').textContent='Desa Ninja Netizen · '+D.length+' warga resmi. Kamu masuk sebagai pengunjung.'}
 mkN();
 const hi=['Sugeng rawuh, Kisanak!','Monggo mampir ke alun-alun.','Desa kita makin rame!','Sugeng enjing!'];
 let tg=null,down=0;const K={};
