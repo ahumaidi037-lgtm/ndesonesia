@@ -43,7 +43,7 @@ const HPOS=[[540,230],[990,230],[1130,230],[1270,230],[1410,230],[100,520],[260,
 [1030,590],[1390,590],[1150,930],[1290,930],[1430,930],[1550,225],[1690,225],[1830,225],[1970,225],[2110,225],[2250,225],[1620,580],[1760,580],[1900,580],[2040,580],[2180,580],[985,440],[950,740],[70,1040],[205,1040],[340,1040],[570,700],[2240,960],[430,850]];
 let HS=[];function mkH(){HS=D.filter(d=>d.s).slice(0,HPOS.length).map((d,i)=>({n:d.n,x:HPOS[i][0],y:HPOS[i][1],i}))}
 mkH();HS.forEach(h=>R.push([h.x-6,h.y-66,134,72]));R.push([930,895,140,75],[60,60,470,300],[1174,516,150,70],[464,896,160,74],[684,150,236,70],[888,388,74,40],[114,830,222,76]);
-const BLD=[['Kopdes',1620,740,180],['City Mall',1900,740,320],['Masjid',1960,440,220],['Sekolahan',1620,440,260]],RN=(RAW.rencana||[]).map(n=>n.toLowerCase()),built=n=>!RN.includes(n.toLowerCase()),LOTS=BLD.filter(l=>!built(l[0]));BLD.forEach(l=>R.push([l[1]-6,l[2]-70,l[3]+22,76]));
+const BLD=[['Kopdes',1620,740,240],['City Mall',1900,740,320],['Masjid',1960,440,220],['Sekolahan',1620,440,260]],RN=(RAW.rencana||[]).map(n=>n.toLowerCase()),built=n=>!RN.includes(n.toLowerCase()),LOTS=BLD.filter(l=>!built(l[0]));BLD.forEach(l=>R.push([l[1]-6,l[2]-70,l[3]+22,76]));
 function spot(){let a,b,k=0;do{a=60+Math.random()*(W-120);b=320+Math.random()*540;k++}while(bl(a,b)&&k<40);return[a,b]}
 function mkN(){N=[{x:900,y:660,c:'#b8860b',n:'Kades Agung',t:0,s:'',g:null,f:1}].concat(D.map((d,i)=>{const p=spot();return{x:p[0],y:p[1],c:CL[i%6],n:d.n,ok:d.s?1:0,t:0,s:'',g:null}})).concat(Array.from({length:Math.max(0,Math.min(60,TOTAL-1-D.length))},(_,i)=>{const p=spot();return{x:p[0],y:p[1],c:CL[(i+3)%6],n:'',ok:0,gh:1,t:0,s:'',g:null}}));document.getElementById('cnt').textContent='Kamu masuk sebagai pengunjung.';stats()}
 function stats(){const a=D.filter(d=>d.s).length+1;document.getElementById('s2').textContent='👥 '+TOTAL+' warga';document.getElementById('s1').textContent='✅ Sah: '+a;document.getElementById('s0').textContent='⏳ Belum sah: '+Math.max(0,TOTAL-a);document.getElementById('s3').textContent='🏗️ Rencana: '+(RAW.rencana||[]).length;document.getElementById('s3').style.display=(RAW.rencana||[]).length?'':'none'}
@@ -92,7 +92,7 @@ function dark(h){if(h<=4.5||h>=19.5)return 1;if(h<6.5)return 1-(h-4.5)/2;if(h<=1
 function sky(h){const k=dark(h),wm=Math.max(0,1-Math.abs(h-6)/1.2,1-Math.abs(h-18)/1.2),w=c.width,hh=c.height;x.setTransform(1,0,0,1,0,0);
 if(wm>0){x.fillStyle='rgba(255,130,50,'+(wm*.2)+')';x.fillRect(0,0,w,hh)}
 if(k>0){if(LC.width!=w||LC.height!=hh){LC.width=w;LC.height=hh}lx.globalCompositeOperation='source-over';lx.clearRect(0,0,w,hh);lx.fillStyle='rgba(8,14,48,'+(.62*k)+')';lx.fillRect(0,0,w,hh);lx.globalCompositeOperation='destination-out';
-const S=dpr*sc,L=[[720,990,150],[880,990,150],[800,540,60],[P.x,P.y-20,80]].concat(HS.map(h=>[h.x+60,h.y-20,100]),[[1000,945,130],[1245,555,120],[545,925,130],[868,430,100],[800,170,150],[925,270,100],[220,860,140],[1750,395,170],[2070,380,170],[1710,700,130],[2060,690,220]],N.filter(o=>o.ok!==0).map(o=>[o.x,o.y-20,70]));
+const S=dpr*sc,L=[[720,990,150],[880,990,150],[800,540,60],[P.x,P.y-20,80]].concat(HS.map(h=>[h.x+60,h.y-20,100]),[[1000,945,130],[1245,555,120],[545,925,130],[868,430,100],[800,170,150],[925,270,100],[220,860,140],[1750,395,170],[2070,380,170],[1740,700,160],[2060,690,220]],N.filter(o=>o.ok!==0).map(o=>[o.x,o.y-20,70]));
 L.forEach(a=>{const sx=(a[0]-cx)*S,sy=(a[1]-cy)*S,r=a[2]*S,g=lx.createRadialGradient(sx,sy,0,sx,sy,r);g.addColorStop(0,'rgba(0,0,0,.9)');g.addColorStop(1,'rgba(0,0,0,0)');lx.fillStyle=g;lx.fillRect(sx-r,sy-r,2*r,2*r)});
 x.drawImage(LC,0,0);x.globalCompositeOperation='lighter';[[720,1012],[880,1012]].forEach(a=>{const sx=(a[0]-cx)*S,sy=(a[1]-cy)*S,r=70*S,g=x.createRadialGradient(sx,sy,0,sx,sy,r);g.addColorStop(0,'rgba(255,150,60,'+(.35*k)+')');g.addColorStop(1,'rgba(255,150,60,0)');x.fillStyle=g;x.fillRect(sx-r,sy-r,2*r,2*r)});x.globalCompositeOperation='source-over'}
 const hr=Math.floor(h),mn=Math.floor((h-hr)*60),lb=(k>=1?'🌙 Malam':k>0?(h<12?'🌅 Fajar':'🌇 Senja'):'☀️ Siang')+' · '+String(hr).padStart(2,'0')+'.'+String(mn).padStart(2,'0');if(lb!=lastTm){lastTm=lb;document.getElementById('tm').textContent=lb}}
@@ -213,16 +213,28 @@ x.fillStyle='#e6c24a';x.fillRect(m-1,y0-H-96,3,18);x.beginPath();x.arc(m,y0-H-10
 const tx=x0-14;const tg2=x.createLinearGradient(tx,0,tx+24,0);tg2.addColorStop(0,'#f7f3e6');tg2.addColorStop(1,'#cfc9b2');x.fillStyle=tg2;x.fillRect(tx,y0-170,24,170);x.fillStyle='#c9a24a';x.fillRect(tx-3,y0-120,30,6);x.fillRect(tx-3,y0-170,30,6);
 x.fillStyle=DK>.3?'#ffd27a':'#7fb4d8';x.fillRect(tx+8,y0-150,8,14);x.fillStyle='#2f8f5a';x.beginPath();x.ellipse(tx+12,y0-170,14,18,0,Math.PI,0);x.fill();x.fillStyle='#e6c24a';x.fillRect(tx+11,y0-198,2,14);x.beginPath();x.arc(tx+12,y0-202,4,0,7);x.fill();
 txt('Masjid',m,y0+16,11)}
-function kopdes3(){const x0=1620,y0=740,W=180,H=56,sx=16,sy=10;
+function kopdes3(){const x0=1620,y0=740,W=240,H=48,sx=16,sy=10;
 poly([x0,y0,x0+W,y0,x0+W+sx+44,y0-sy+16,x0+sx+44,y0-sy+16],'rgba(0,0,0,.22)');
-const g=x.createLinearGradient(x0,0,x0+W,0);g.addColorStop(0,'#f2e8cc');g.addColorStop(1,'#d9cba3');x.fillStyle=g;x.fillRect(x0,y0-H,W,H);
-poly([x0+W,y0,x0+W+sx,y0-sy,x0+W+sx,y0-sy-H,x0+W,y0-H],'#a99b73');
-for(let k=0;k<9;k++){x.fillStyle=k%2?'#fff':'#d62b2b';x.fillRect(x0+k*20,y0-H,20,14)}
-x.fillStyle=DK>.3?'#ffd27a':'#a8d8ff';x.fillRect(x0+14,y0-38,50,26);x.fillRect(x0+W-64,y0-38,50,26);x.strokeStyle='#8a5a2a';x.lineWidth=2;x.strokeRect(x0+14,y0-38,50,26);x.strokeRect(x0+W-64,y0-38,50,26);
-x.fillStyle='#8a5a2a';x.fillRect(x0+W/2-14,y0-34,28,34);
-tier(x0-12,x0+W+12,y0-H+8,y0-H-30,x0+W*.08,x0+W*.92,'#c0392b','#942d22');
-x.fillStyle='#fff';x.fillRect(x0+W/2-44,y0-H-22,88,18);x.strokeStyle='#d62b2b';x.lineWidth=2;x.strokeRect(x0+W/2-44,y0-H-22,88,18);txt('KOPDES',x0+W/2,y0-H-8,11,'#d62b2b');
-txt('Kopdes (Koperasi Desa)',x0+W/2,y0+16,10)}
+x.fillStyle='#f4f1ea';x.fillRect(x0,y0-H,W,H);
+poly([x0+W,y0,x0+W+sx,y0-sy,x0+W+sx,y0-sy-H,x0+W,y0-H],'#cfc9ba');
+x.fillStyle='#c9c4b6';x.fillRect(x0,y0-5,W,5);
+const gl=x.createLinearGradient(0,y0-38,0,y0-6);gl.addColorStop(0,DK>.3?'#fff2b0':'#a9cfe0');gl.addColorStop(1,DK>.3?'#ffd27a':'#6d9fb8');x.fillStyle=gl;x.fillRect(x0+6,y0-38,150,32);
+x.fillStyle='rgba(30,45,55,.55)';x.fillRect(x0+6,y0-24,150,2);for(let k=0;k<4;k++)x.fillRect(x0+6+k*36+18,y0-38,1.5,32);
+x.fillStyle='#c4161c';for(let k=0;k<5;k++)x.fillRect(x0+4+k*36,y0-44,6,44);
+x.fillStyle='#c4161c';x.fillRect(x0,y0-44,W,6);
+poly([x0+2,y0-38,x0+158,y0-38,x0+164,y0-31,x0-2,y0-31],'#ececec');
+const lx0=x0+160,ly=y0-37;
+x.strokeStyle='#d62b2b';x.lineWidth=2.4;x.lineJoin='miter';x.beginPath();x.moveTo(lx0,ly+25);x.lineTo(lx0,ly+9);x.lineTo(lx0+10,ly+1);x.lineTo(lx0+32,ly+1);x.stroke();
+x.beginPath();x.moveTo(lx0,ly+27);x.lineTo(lx0+32,ly+27);x.stroke();
+x.fillStyle='#555';x.fillRect(lx0+3.3,ly+6,1,9);x.fillStyle='#d62b2b';x.fillRect(lx0+4.3,ly+6,5,2.5);x.fillStyle='#fff';x.fillRect(lx0+4.3,ly+8.5,5,2.5);x.strokeStyle='#bbb';x.lineWidth=.5;x.strokeRect(lx0+4.3,ly+6,5,5);
+x.font='bold 9px Georgia,serif';x.textAlign='center';x.fillStyle='#d62b2b';x.fillText('KOP',lx0+20,ly+13);x.fillText('DES',lx0+20,ly+24);
+x.fillStyle='#d62b2b';x.fillRect(lx0-2,ly+29,36,8);x.font='bold 5px Georgia,serif';x.fillStyle='#fff';x.fillText('MERAH PUTIH',lx0+16,ly+35);
+for(let d=0;d<2;d++){const sx0=x0+202+d*20;x.fillStyle='#b8141a';x.fillRect(sx0,y0-36,16,36);x.fillStyle='rgba(0,0,0,.25)';for(let j=0;j<9;j++)x.fillRect(sx0,y0-35+j*4,16,1)}
+poly([x0+190,y0,x0+W+6,y0,x0+W+22,y0+10,x0+176,y0+10],'#a3a39d');poly([x0+176,y0+10,x0+W+22,y0+10,x0+W+22,y0+14,x0+176,y0+14],'#7d7d78');
+tier(x0-16,x0+W+16,y0-H+4,y0-H-30,x0+W*.05,x0+W*.95,'#c4161c','#9a0f14');
+tier(x0+W*.04,x0+W*.96,y0-H-24,y0-H-40,x0+W*.12,x0+W*.88,'#d62b2b','#a8141a');
+poly([x0+W+16,y0-H+4,x0+W+16+sx,y0-H+4-sy,x0+W*.95+sx,y0-H-30-sy,x0+W*.95,y0-H-30],'#7f0c11');
+txt('Kopdes (Koperasi Desa)',x0+W/2,y0+30,10)}
 function mall3(){const x0=1900,y0=740,W=320,F=40,H=F*3,sx=20,sy=14;
 poly([x0,y0,x0+W,y0,x0+W+sx+60,y0-sy+20,x0+sx+60,y0-sy+20],'rgba(0,0,0,.24)');
 const g=x.createLinearGradient(x0,0,x0+W,0);g.addColorStop(0,'#cfe6f7');g.addColorStop(1,'#9cc3e0');x.fillStyle=g;x.fillRect(x0,y0-H,W,H);
