@@ -119,7 +119,7 @@ const RL=[[/astronot/i,{c:'#f4f6fa',hd:'astro',z:[1960,845,2240,930],ic:'🚀',b
 function roleOf(r){if(!r)return null;for(const q of RL)if(q[0].test(r))return q[1];return{c:null,hd:'',z:null,ic:'⭐',bf:'#dcebff',bs:'#1f4fa8',bt:'#1f4fa8'}}
 function mkN(){N=[{x:2300,y:2400,c:'#b8860b',n:'Kades Agung',t:0,s:'',g:null,f:1}].concat(D.map((d,i)=>{const cf=roleOf(d.r),z=cf&&cf.z||null,p=z?spotZ(z):spot();return{x:p[0],y:p[1],c:(cf&&cf.c)||CL[i%6],n:d.n,r:d.r,hd:cf?cf.hd:'',z:z,bf:cf&&cf.bf,bs:cf&&cf.bs,bt:cf&&cf.bt,ok:d.s?1:0,t:0,s:'',g:null}})).concat(Array.from({length:Math.max(0,Math.min(100,TOTAL-1-D.length))},(_,i)=>{const p=spot();return{x:p[0],y:p[1],c:CL[(i+3)%6],n:'',ok:0,gh:1,t:0,s:'',g:null}}));stats()}
 function stats(){const sah=D.filter(d=>d.s).length,dt=new Date().toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});document.getElementById('wTot').textContent=TOTAL;document.getElementById('wInfo').innerHTML='✅ '+sah+' sah · ⏳ '+Math.max(0,TOTAL-sah)+' belum sah<br>diperbarui '+dt}
-mkN();
+mkN();N.forEach(unstick);
 const YT_KEY='',YT_VID='';
 async function ytCek(){if(!YT_KEY||!YT_VID)return;try{let T;const ch=JSON.parse(localStorage.getItem('ytc')||'null');if(ch&&Date.now()-ch.t<6e5)T=ch.v;else{T='';let tok='';for(let p=0;p<2;p++){const r=await fetch('https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=100&order=time&textFormat=plainText&videoId='+encodeURIComponent(YT_VID)+'&key='+encodeURIComponent(YT_KEY)+(tok?'&pageToken='+tok:''));const j=await r.json();if(!r.ok)return;(j.items||[]).forEach(i=>{T+=' '+i.snippet.topLevelComment.snippet.textDisplay.toLowerCase().replace(/[^a-z0-9]/g,'')});tok=j.nextPageToken;if(!tok)break}try{localStorage.setItem('ytc',JSON.stringify({t:Date.now(),v:T}))}catch(e){}}
 D.forEach(d=>{if(!d.s&&T.includes(d.n.toLowerCase().replace(/[^a-z0-9]/g,'')))d.s=1});N.forEach(o=>{const d=D.find(q=>q.n==o.n);if(d)o.ok=d.s?1:0});stats()}catch(e){}}
@@ -750,6 +750,16 @@ if(S3>=.3)ZLB.forEach(l=>{const p=pj(l[1],l[2],0);if(off3(p))return;const fs=Mat
 if(S3>=.6)LBL.forEach(l=>{const p=pj(l.x,l.y,l.z);x.font='bold 9px Georgia,serif';x.textAlign='center';x.lineWidth=3;x.strokeStyle='rgba(255,255,255,.92)';x.strokeText(l.t,p[0],p[1]);x.fillStyle='#8a5a1a';x.fillText(l.t,p[0],p[1])});
 if(S3<.3){x.font='italic bold '+Math.max(10,S3*70)+'px Georgia,serif';x.textAlign='center';x.lineWidth=4;x.strokeStyle='rgba(255,255,255,.9)';[['JALAN RAYA',2200,260],['REL KERETA',2200,150]].forEach(t=>{const p=pj(t[1],t[2],0);x.strokeText(t[0],p[0],p[1]);x.fillStyle='#1f4fa8';x.fillText(t[0],p[0],p[1])})}
 if(S3>=.2)CH.sort((a,b)=>(a.x+a.y)-(b.x+b.y)).forEach(bub3)}
+/* ===== GERAK WARGA: tujuan dekat & jalurnya dicek bebas, tidak merayap di tembok ===== */
+function clr(a,b,c,d){const n=Math.ceil(Math.hypot(c-a,d-b)/10);for(let i=1;i<=n;i++)if(bl(a+(c-a)*i/n,b+(d-b)*i/n))return 0;return 1}
+function unstick(o){if(!bl(o.x,o.y))return;for(let r=10;r<=500;r+=10)for(let k=0;k<12;k++){const an=k*Math.PI/6,px=o.x+Math.cos(an)*r,py=o.y+Math.sin(an)*r;if(!bl(px,py)){o.x=px;o.y=py;return}}}
+function newGoal(o){const z=o.z;for(let i=0;i<30;i++){let a,b;if(z){a=z[0]+Math.random()*(z[2]-z[0]);b=z[1]+Math.random()*(z[3]-z[1])}else{const rg=i<20?320:900;a=o.x+(Math.random()-.5)*2*rg;b=o.y+(Math.random()-.5)*2*rg}if(a<470||b<470||a>3930||b>3930)continue;if(!bl(a,b)&&clr(o.x,o.y,a,b)){o.g={x:a,y:b};o.fail=0;return}}
+o.g=null;o.fail=(o.fail||0)+1;if(z&&o.fail>6){const p=spotZ(z);if(!bl(p[0],p[1])){o.x=p[0];o.y=p[1]}o.fail=0}else if(!z&&o.fail>6){unstick(o);o.fail=0}}
+function npcStep(o){o.m=0;if(o.st===undefined)o.st=0;if(bl(o.x,o.y))unstick(o);
+if(o.g&&Math.hypot(o.g.x-o.x,o.g.y-o.y)<3)o.g=null;
+if(!o.g&&Math.random()<.02)newGoal(o);
+if(o.g){const ex=o.g.x-o.x,ey=o.g.y-o.y,d=Math.hypot(ex,ey)||1,q=o.x,r=o.y,sp=Math.min(1,d);mv(o,ex/d*sp,ey/d*sp);const mvd=Math.hypot(o.x-q,o.y-r);o.m=mvd>.5;if(mvd<.5){o.st++;if(o.st>6){o.g=null;o.st=0}}else o.st=0}
+if(o.t<=0&&!o.gh&&Math.random()<.0015){o.s=hi[Math.floor(Math.random()*hi.length)];o.t=180}}
 function loop(){
 let sxv=(K.arrowright||K.d?1:0)-(K.arrowleft||K.a?1:0),syv=(K.arrowdown||K.s?1:0)-(K.arrowup||K.w?1:0);
 if(Math.hypot(jx,jy)>.15){sxv=jx;syv=jy}
@@ -757,9 +767,7 @@ let dx=0,dy=0;
 if(sxv||syv){tg=null;free=0;const a=sxv/.866,b=syv/.5;dx=(a+b)/2;dy=(b-a)/2;const l=Math.hypot(dx,dy)||1;dx=dx/l*3.2;dy=dy/l*3.2}
 else if(tg){const ex=tg.x-P.x,ey=tg.y-P.y,d=Math.hypot(ex,ey);if(d<4)tg=null;else{dx=ex/d*3.2;dy=ey/d*3.2}}
 const ox=P.x,oy=P.y;mv(P,dx,dy);P.m=!(P.x==ox&&P.y==oy);if(tg&&P.x==ox&&P.y==oy)tg=null;
-N.forEach(o=>{o.m=0;if(!o.g||Math.hypot(o.g.x-o.x,o.g.y-o.y)<4){if(Math.random()<.01){let a,b,i=0;const z=o.z;do{a=z?z[0]+Math.random()*(z[2]-z[0]):460+Math.random()*3480;b=z?z[1]+Math.random()*(z[3]-z[1]):460+Math.random()*3480;i++}while(bl(a,b)&&i<20);o.g=bl(a,b)?null:{x:a,y:b}}}
-if(o.g){const ex=o.g.x-o.x,ey=o.g.y-o.y,d=Math.hypot(ex,ey)||1,q=o.x,r=o.y;mv(o,ex/d*1,ey/d*1);o.m=!(o.x==q&&o.y==r);if(!o.m)o.g=null}
-if(o.t<=0&&!o.gh&&Math.random()<.0015){o.s=hi[Math.floor(Math.random()*hi.length)];o.t=180}});
+N.forEach(npcStep);
 {const d=((S_STOP-TR.s)%RT+RT)%RT;if(TR.dw>0)TR.dw--;else{const v=(d<300&&!TR.st)?Math.min(2.6,Math.max(.35,d*.012)):2.6;TR.s+=v;if(d<1.5&&!TR.st){TR.st=1;TR.dw=320}if(d>1000)TR.st=0}}
 CARS.forEach(o=>{o.s+=o.v});
 if(!free){T3x+=(P.x-T3x)*.12;T3y+=(P.y-T3y)*.12}
